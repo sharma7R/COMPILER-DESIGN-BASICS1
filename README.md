@@ -13,4 +13,4 @@ USE OF CODE:
 * Code Generation & Optimization – Translates code into machine instructions and improves performance.
 
 * Linking & Execution – Combines compiled code with libraries to create the final executable
-output :
+output : https://github.com/user-attachments/assets/367acabf-57bb-42e5-ad9d-7eb53590b4c1
