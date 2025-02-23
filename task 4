@@ -1,0 +1,85 @@
+#include <iostream>
+#include <sstream>
+#include <cctype>
+
+class Parser {
+    std::istringstream input;
+    char currentChar;
+
+    void advance() {
+        input.get(currentChar);
+    }
+
+    void skipWhitespace() {
+        while (std::isspace(currentChar)) advance();
+    }
+
+    int number() {
+        int result = 0;
+        while (std::isdigit(currentChar)) {
+            result = result * 10 + (currentChar - '0');
+            advance();
+        }
+        return result;
+    }
+
+    int factor() {
+        skipWhitespace();
+        if (currentChar == '(') {
+            advance();
+            int result = expr();
+            advance(); // consume ')'
+            return result;
+        } else {
+            return number();
+        }
+    }
+
+    int term() {
+        int result = factor();
+        skipWhitespace();
+        while (currentChar == '*' || currentChar == '/') {
+            char op = currentChar;
+            advance();
+            skipWhitespace();
+            int right = factor();
+            if (op == '*') result *= right;
+            else if (op == '/') result /= right;
+        }
+        return result;
+    }
+
+    int expr() {
+        int result = term();
+        skipWhitespace();
+        while (currentChar == '+' || currentChar == '-') {
+            char op = currentChar;
+            advance();
+            skipWhitespace();
+            int right = term();
+            if (op == '+') result += right;
+            else if (op == '-') result -= right;
+        }
+        return result;
+    }
+
+public:
+    Parser(const std::string& expression) : input(expression), currentChar(' ') {
+        advance();
+    }
+
+    int parse() {
+        return expr();
+    }
+};
+
+int main() {
+    std::string expression;
+    std::cout << "Enter an arithmetic expression: ";
+    std::getline(std::cin, expression);
+
+    Parser parser(expression);
+    std::cout << "Result: " << parser.parse() << std::endl;
+
+    return 0;
+}
